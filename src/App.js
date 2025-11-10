@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from "react";
+import NavBar from "./components/NavBar";
+import Home from "./pages/Home";
+import FormPage from "./pages/FormPage";
+import "./App.css";
 
 function App() {
+  const [route, setRoute] = useState("home"); // "home" or "form"
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar route={route} onNavigate={setRoute} />
+      <main style={{ padding: "20px" }}>
+        {route === "home" && <Home />}
+        {route === "form" && <FormPage />}
+      </main>
     </div>
   );
 }
