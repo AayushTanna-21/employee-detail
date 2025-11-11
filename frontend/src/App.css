@@ -35,8 +35,9 @@ input, select, textarea {
 
 button {
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  border-color: #007bff;
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.06);
   font-size: 16px;
   border: none;
   border-radius: 6px;
@@ -60,8 +61,6 @@ button:hover {
   border-radius: 10px;
   border: 1px solid #ccc;
 }
-
-/* append to src/App.css */
 
 .nav {
   background: #fff;
@@ -123,5 +122,60 @@ button:hover {
 
 h2 {
   margin-bottom: 12px;
+}
+
+.form-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh; 
+  background-color: #f3f4f6; 
+  padding: 20px;
+}
+.form-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 30px 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+.preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.preview-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.remove-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 18px;
+  text-align: center;
+  padding: 0;
+}
+.remove-btn:hover {
+  background: #d9534f;
 }
 

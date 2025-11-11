@@ -1,6 +1,3 @@
-// src/components/NavBar.jsx
-import React from "react";
-
 export default function NavBar({ route, onNavigate }) {
   return (
     <nav className="nav">
