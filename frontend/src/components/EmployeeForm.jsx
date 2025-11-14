@@ -1,4 +1,5 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+
 export default function EmployeeForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -9,6 +10,7 @@ export default function EmployeeForm({ onSubmit }) {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
   const fileInputRef = useRef(null);
+
   useEffect(() => {
     return () => {
       imagePreviews.forEach((p) => {
@@ -18,13 +20,23 @@ export default function EmployeeForm({ onSubmit }) {
       });
     };
   }, [imagePreviews]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "name") {
+      const lettersOnly = /^[A-Za-z\s]*$/;
+      if (!lettersOnly.test(value)) {
+        return;
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files || []);
-    if (newFiles.length === 0) return;
+    if (!newFiles.length) return;
     const newPreviews = newFiles.map((file) => ({
       url: URL.createObjectURL(file),
       name: file.name,
@@ -33,23 +45,26 @@ export default function EmployeeForm({ onSubmit }) {
     setImagePreviews((prev) => [...prev, ...newPreviews]);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
   const handleRemoveImage = (index) => {
     try {
       URL.revokeObjectURL(imagePreviews[index].url);
     } catch (e) {}
     const newFiles = [...formData.files];
-    const newPreviews = [...imagePreviews];
     newFiles.splice(index, 1);
+    const newPreviews = [...imagePreviews];
     newPreviews.splice(index, 1);
     setFormData((prev) => ({ ...prev, files: newFiles }));
     setImagePreviews(newPreviews);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (parseInt(formData.age, 10) <= 0) {
-      alert("Age cannot be negative");
+    if (parseInt(formData.age, 10) <= 0 || parseInt(formData.age, 10) > 100) {
+      alert("Age must be greater then 0 and less then 100");
       return;
-    }
+    } 
+
     const body = new FormData();
     body.append("name", formData.name);
     body.append("age", formData.age);
@@ -63,7 +78,38 @@ export default function EmployeeForm({ onSubmit }) {
       });
       const json = await res.json();
       if (res.ok && json.success) {
-        if (onSubmit) onSubmit(json.data);
+        let newEmployeeData = json.data;
+        let shouldRefresh = false;
+        if (!newEmployeeData || typeof newEmployeeData !== "object") {
+          console.error(
+            "API success response missing or invalid 'data' object.",
+            json
+          );
+        } else {
+          if (!newEmployeeData.Id) {
+            newEmployeeData.Id = newEmployeeData.id || newEmployeeData.ID;
+          }
+
+          if (!newEmployeeData.Id) {
+            console.error(
+              "API response does not contain the employee ID. Forcing hard refresh.",
+              json
+            );
+            shouldRefresh = true;
+            alert(
+              "Employee added, but missing ID in response. Refreshing the full list."
+            );
+          } else {
+            shouldRefresh = true;
+          }
+        }
+        if (shouldRefresh && newEmployeeData && newEmployeeData.Id) {
+          if (onSubmit) onSubmit(newEmployeeData);
+        }
+        if (onSubmit && (!shouldRefresh || !newEmployeeData.Id)) {
+          onSubmit();
+        }
+
         imagePreviews.forEach((p) => {
           try {
             URL.revokeObjectURL(p.url);
@@ -86,27 +132,31 @@ export default function EmployeeForm({ onSubmit }) {
       alert("Error submitting form");
     }
   };
+
   return (
     <form className="form" onSubmit={handleSubmit}>
+      {" "}
       <label>
-        Upload Image(s)
+        Upload Image(s){" "}
         <input
           ref={fileInputRef}
           type="file"
           multiple
           accept="image/*"
           onChange={handleFileChange}
-        />
-      </label>
+        />{" "}
+      </label>{" "}
       {imagePreviews.length > 0 && (
         <div className="preview-container">
+          {" "}
           {imagePreviews.map((p, idx) => (
             <div key={`${p.name}-${idx}`} className="preview-wrapper">
+              {" "}
               <img
                 src={p.url}
                 alt={`Preview ${idx + 1}`}
                 className="preview-img"
-              />
+              />{" "}
               <button
                 type="button"
                 className="remove-btn"
@@ -114,35 +164,35 @@ export default function EmployeeForm({ onSubmit }) {
                 aria-label={`Remove image ${idx + 1}`}
               >
                 ×
-              </button>
+              </button>{" "}
             </div>
-          ))}
+          ))}{" "}
         </div>
-      )}
+      )}{" "}
       <label>
-        Name
+        Name{" "}
         <input
           type="text"
           name="name"
-          placeholder="Enter name of employee"
+          placeholder="Enter name"
           value={formData.name}
           onChange={handleChange}
           required
-        />
-      </label>
+        />{" "}
+      </label>{" "}
       <label>
-        Age
+        Age{" "}
         <input
           type="number"
           name="age"
-          placeholder="Enter Age of employee"
+          placeholder="Enter age"
           value={formData.age}
           onChange={handleChange}
           required
-        />
-      </label>
+        />{" "}
+      </label>{" "}
       <label>
-        Designation
+        Designation{" "}
         <select
           name="designation"
           value={formData.designation}
@@ -151,21 +201,20 @@ export default function EmployeeForm({ onSubmit }) {
         >
           <option>Manager</option>
           <option>Assistant Manager</option>
-          <option>Senior Developer</option>
-          <option>Junior Developer</option>
-        </select>
-      </label>
+          <option>Senior Developer</option> <option>Junior Developer</option>{" "}
+        </select>{" "}
+      </label>{" "}
       <label>
-        Details
+        Details{" "}
         <textarea
           name="details"
-          placeholder="Enter Employee Details"
+          placeholder="Enter employee details"
           value={formData.details}
           onChange={handleChange}
           rows="4"
-        />
+        />{" "}
       </label>
-      <button type="submit">Submit</button>
+      <button type="submit">Submit</button>{" "}
     </form>
   );
 }

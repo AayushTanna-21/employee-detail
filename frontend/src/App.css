@@ -179,3 +179,131 @@ h2 {
   background: #d9534f;
 }
 
+/* ---------- Fancy table base (targeting your DataTable .display) ---------- */
+.display {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Table cells */
+.display th,
+.display td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+/* Row striping */
+.display tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Row hover */
+.display tr:hover {
+  background-color: #ddd;
+}
+
+/* Header style matching your sample */
+.display thead th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D; /* green header */
+  color: white;
+  font-weight: 600;
+}
+
+/* Small images alignment inside table cells */
+.display td img {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* ---------- Pagination styling: adapt DataTables structure ---------- */
+/* DataTables creates a wrapper .dataTables_wrapper .dataTables_paginate with buttons.
+   We'll style the buttons so they look like your .pagination example. */
+
+/* Container alignment */
+.dataTables_wrapper .dataTables_paginate {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* Buttons container (DataTables uses a div containing <a> elements).
+   We will style those anchor buttons similarly to your .pagination a */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 4px;
+  text-decoration: none !important;
+  color: black !important;
+  border: 1px solid gray;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  min-width: 34px;
+  text-align: center;
+}
+
+/* Active page */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.active {
+  background-color: #4CAF50 !important; /* green active */
+  color: white !important;
+  border-color: #4CAF50 !important;
+}
+
+/* Previous/Next chevrons might have classes; ensure arrows match style */
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next {
+  font-weight: 600;
+}
+
+/* Hover state */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: #eee;
+}
+
+/* Remove default focus outline but keep accessibility via box-shadow on keyboard focus */
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+/* ---------- Optional: length selector and search layout polishing ---------- */
+/* Make length select and filter search sit nicely */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  margin-bottom: 8px;
+}
+
+/* Make length select nicer */
+.dataTables_wrapper select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Make the default search input nicer */
+.dataTables_wrapper .dataTables_filter input {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Hide DataTables message "Showing 1 to 5 of X entries" - if you want to remove it (you asked before) */
+.dataTables_wrapper .dataTables_info {
+  display: none; /* remove line "Showing 1 to 5 of X entries" */
+}
+
+/* Small responsive tweak so images don't overflow on narrow screens */
+@media (max-width: 600px) {
+  .display td img { width: 40px; height: 32px; }
+  .dataTables_wrapper .dataTables_paginate .paginate_button { padding: 6px 8px; margin: 0 2px; }
+}
